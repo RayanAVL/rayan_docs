@@ -1,0 +1,24 @@
+{
+  "name": "rayan_docs",
+  "version": "1.0.0",
+  "description": "RayanAVL API Documentation",
+  "main": "docs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RayanAVL/rayan_docs.git"
+  },
+  "keywords": [],
+  "author": "sajjad safari",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/RayanAVL/rayan_docs/issues"
+  },
+  "homepage": "https://github.com/RayanAVL/rayan_docs#readme",
+  "dependencies": {
+    "swagger-ui": "^3.24.3",
+    "swagger-ui-dist": "^3.24.3"
+  }
+}
