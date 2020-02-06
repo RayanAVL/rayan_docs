@@ -1,25 +1,25 @@
 ---
 openapi: "3.0.0"
 info:
-  title: Rayan AVL API Documentations
+  title: Rayan GPS API Documentation
   version: 1.1.0
   description:
-    This is `RayanAVL.ir` APIs documentation You can find out more about
-    AVL at [rayangps.com](http://rayangps.com)
+    This is `RayanGPS.com/Panel` APIs documentation You can find out more about
+    AVL at [RayanGPS.com](http://rayangps.com)
 
 servers:
   - url: http://localhost:2001/api
     description: localhost
-  - url: https://rayanavl.ir:3001/api
+  - url: https://rayangps.com:3001/api
     description: HTTPS (Recommended)
-  - url: http://rayanavl.ir:2001/api
+  - url: http://rayangps.com:2001/api
     description: HTTP
 
 tags:
   - name: Ticketing
     description: Ticketing system for users
     externalDocs:
-      url: https://rayanavl.ir/support/ticket
+      url: https://rayangps.com/panel/support/ticket
 
 paths:
   /ticket:
