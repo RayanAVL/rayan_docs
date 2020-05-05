@@ -162,10 +162,11 @@ paths:
           application/json:
             schema:
               type: object
+              required: 
+                - title
               properties:
                 title:
                   type: string
-                  required: true
                 priority:
                   $ref: "#/components/schemas/ticket/properties/priorities"
                 application:
@@ -173,7 +174,7 @@ paths:
                 car:
                   $ref: "#/components/schemas/general/properties/objectId"
                 text:
-                  type: string
+                  type: string 
             example:
               title: عنوان تیکت/موضوع تیکت'
               priority: 0
