@@ -1,4 +1,5 @@
 ---
+---
 openapi: "3.0.0"
 info:
   title: Rayan GPS API Documentation
@@ -16,12 +17,104 @@ servers:
     description: HTTP
 
 tags:
+  - name: Users
+    description: Operations on users information
+    externalDocs:
+      url: https://rayangps.com/panel/profile
+      
   - name: Ticketing
     description: Ticketing system for users
     externalDocs:
       url: https://rayangps.com/panel/support/ticket
-
+      
+      
 paths:
+  /user:
+    get:
+      tags:
+        - Users
+      operationId: getUserV1
+      summary: returns authorized user information
+      security:
+        - jwtAuth: []
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    {
+                      "_id": "5cea9a1f69ceb503e8358119",
+                      "company": "",
+                      "fName": "Rayan",
+                      "idCode": "",
+                      "lName": "گروه مهندسی رایان داده",
+                      "mobile": "09130399222",
+                      "telephone": "",
+                      "zipCode": "25",
+                      "address": "",
+                      "birthdate": null
+                    }
+                    
+    put:
+      tags:
+        - Users
+      operationId: putUserV1
+      summary: updates authorized user information
+      security:
+        - jwtAuth: []
+      parameters:
+        - in: path
+          name: ticketId
+          required: false
+          schema:
+            $ref: "#/components/schemas/general/properties/objectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fName:
+                  type: string
+                lName:
+                  type: string
+                mobile:
+                  type: string
+                telephone:
+                  type: string
+                zipCode:
+                  type: string
+                address:
+                  type: string
+                birthdate:
+                  type: object
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+            example:
+              fName: Ali
+              lName: Salehi
+              mobile: 09130399222
+              telephone: 02536662323
+              address: azadi .st
+              zipCode: 25
+              birthdate: null
+              currentPassword: a111111
+              newPassword: a333333
+      responses:
+        "200":
+          description: |-
+            OK
+        "403":
+          description: |-
+            currentPassword is not correct.
+
   /ticket:
     get:
       tags:
