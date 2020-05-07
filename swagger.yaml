@@ -68,7 +68,7 @@ paths:
         - jwtAuth: []
       parameters:
         - in: path
-          name: ticketId
+          name: userId
           required: false
           schema:
             $ref: "#/components/schemas/general/properties/objectId"
