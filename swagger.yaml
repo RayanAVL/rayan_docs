@@ -1,9 +1,8 @@
 ---
----
 openapi: "3.0.0"
 info:
   title: Rayan GPS API Documentation
-  version: 1.1.0
+  version: 1.2.0
   description:
     This is `RayanGPS.com/Panel` APIs documentation You can find out more about
     AVL at [RayanGPS.com](http://rayangps.com)
@@ -21,13 +20,17 @@ tags:
     description: Operations on users information
     externalDocs:
       url: https://rayangps.com/panel/profile
-      
+
+  - name: Payment
+    description: User payment request
+    externalDocs:
+      url: https://rayangps.com/panel/payment
+
   - name: Ticketing
     description: Ticketing system for users
     externalDocs:
       url: https://rayangps.com/panel/support/ticket
-      
-      
+
 paths:
   /user:
     get:
@@ -56,9 +59,9 @@ paths:
                       "telephone": "",
                       "zipCode": "25",
                       "address": "",
-                      "birthdate": null
+                      "birthdate": "1990-07-05T20:30:00.000Z",
+                      "accountBalance": 1000
                     }
-                    
     put:
       tags:
         - Users
@@ -104,7 +107,7 @@ paths:
               telephone: 02536662323
               address: azadi .st
               zipCode: 25
-              birthdate: null
+              birthdate: "1990-07-05T20:30:00.000Z"
               currentPassword: a111111
               newPassword: a333333
       responses:
@@ -114,6 +117,42 @@ paths:
         "403":
           description: |-
             currentPassword is not correct.
+
+  /payment/deposit:
+    post:
+      tags:
+        - Payment
+      operationId: getUserV1
+      summary: returns bank terminal URL
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  summary: amount of money which user wants to deposit (in Rials), should be at least 10000
+            example:
+              amount: 10000
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    {
+                      "url": "https://bpm.shaparak.ir/pgwchannel/startpay.mellat?RefId=A5141D19DAF64F96"
+                    }
+        "400":
+          description: |-
+            Bad request. "amount" property is required
 
   /ticket:
     get:
@@ -255,7 +294,7 @@ paths:
           application/json:
             schema:
               type: object
-              required: 
+              required:
                 - title
               properties:
                 title:
@@ -267,7 +306,7 @@ paths:
                 car:
                   $ref: "#/components/schemas/general/properties/objectId"
                 text:
-                  type: string 
+                  type: string
             example:
               title: عنوان تیکت/موضوع تیکت'
               priority: 0
