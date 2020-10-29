@@ -30,6 +30,11 @@ tags:
     description: Ticketing system for users
     externalDocs:
       url: https://rayangps.com/panel/support/ticket
+      
+  - name: Report
+    description: Report
+    externalDocs:
+      url: https://rayangps.com/panel/report
 
 paths:
   /user:
@@ -353,6 +358,60 @@ paths:
           description: |-
             Bad request
 
+  /report/hourly:
+    post:
+      tags:
+        - Report
+      operationId: getReportv1
+      summary: returns report data in hour/day/month
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: number
+                  enum: [1, 2, 3]
+                  description: "1: hourly (ساعتی) <br/> 2: daily (روزانه) <br/> 3: monthly (ماهانه)"
+            example:
+              type: 2
+              car: 5ca1c5171616cd086c10957b
+              endDate: '2020-10-25T20:29:59.999Z'
+              startDate: '2020-10-22T20:30:00.000Z'
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    {
+                      "avgSpeed": 9.695652173913043,
+                      "maxSpeed": 79,
+                      "totalDistance": 25883,
+                      "startDate": {
+                        "year": 2020,
+                        "day": 23,
+                        "month": 10
+                      },
+                      "totalStatus": {
+                        "stop": 11472,
+                        "move": 91,
+                        "start": 25,
+                        "off": 25
+                      }
+                    } 
+        "403": 
+          description: |-
+            access denied
+          
+
 components:
   schemas:
     general:
@@ -381,6 +440,7 @@ components:
           enum: [0, 1, 2]
           required: true
           description: "0: low (کم) <br/> 1: medium (متوسط) <br/> 3: high (زیاد)"
+
 
   securitySchemes:
     jwtAuth:
