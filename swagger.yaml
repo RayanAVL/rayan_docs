@@ -2,7 +2,7 @@
 openapi: "3.0.0"
 info:
   title: Rayan GPS API Documentation
-  version: 1.2.0
+  version: 1.3.0
   description:
     This is `RayanGPS.com/Panel` APIs documentation You can find out more about
     AVL at [RayanGPS.com](http://rayangps.com)
@@ -16,6 +16,11 @@ servers:
     description: HTTP
 
 tags:
+  - name: Auth
+    description: Authorization 
+    externalDocs:
+      url: https://rayangps.com/panel/profile
+
   - name: Users
     description: Operations on users information
     externalDocs:
@@ -31,7 +36,25 @@ tags:
     externalDocs:
       url: https://rayangps.com/panel/support/ticket
 
+  - name: Tokens
+    description: User session management
+    externalDocs:
+    url: https://rayangps.com/panel/settings
+
 paths:
+  /logout:
+    post:
+      tags:
+        - Auth
+      operationId: postLogoutV1
+      summary: dispose current user token
+      security:
+        - jwtAuth: []
+      responses:
+        "200":
+          description: |-
+            OK
+
   /user:
     get:
       tags:
@@ -215,12 +238,12 @@ paths:
       security:
         - jwtAuth: []
       parameters:
-        - in: path
-          name: ticketId
-          required: true
-          schema:
-            $ref: "#/components/schemas/general/properties/objectId"
-          description: The ticket ID
+          - in: path
+            name: ticketId
+            required: true
+            schema:
+              $ref: "#/components/schemas/general/properties/objectId"
+            description: The ticket ID
       responses:
         "200":
           description: |-
@@ -353,6 +376,74 @@ paths:
           description: |-
             Bad request
 
+  /token/:
+    get:
+      tags:
+        - Tokens
+      operationId: getTokenV1
+      summary: Get valid tokens
+      security:
+        - jwtAuth: []
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    [
+                      {
+                          "valid": true,
+                          "_id": "5f9aac2a3b270220c8cf3df1",
+                          "loginDate": "2020-10-29T11:48:44.687Z",
+                          "user": {
+                              "_id": "5c210bdcac91d7258444bc3c",
+                              "username": "saj",
+                              "mobile": "09011100000"
+                          },
+                          "userType": "admin",
+                          "application": "rayan_android",
+                          "__v": 0
+                      },
+                      {
+                          "valid": true,
+                          "_id": "5fa276934cc110053ccb6b60",
+                          "user": {
+                              "_id": "5c210bdcac91d7258444bc3c",
+                              "username": "saj",
+                              "mobile": "09011100000"
+                          },
+                          "userType": "admin",
+                          "application": "rayan_web",
+                          "loginDate": "2020-11-04T09:38:27.000Z",
+                          "__v": 0
+                      }
+                    ]
+
+  /token/dispose/{tokenId}:
+    post:
+      tags:
+        - Tokens
+      operationId: disposeTokenV1
+      summary: dispose specified user token
+      security:
+        - jwtAuth: []
+      parameters:
+        - in: path
+          name: tokenId
+          required: true
+          schema:
+            $ref: "#/components/schemas/general/properties/objectId"
+          description: Each jtw token have an id which uses for removing a token
+      responses:
+        "200":
+          description: |-
+            OK
+        "404":
+          description: |-
+            Token not found
 components:
   schemas:
     general:
