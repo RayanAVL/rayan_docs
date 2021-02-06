@@ -124,10 +124,6 @@ paths:
                   type: string
                 birthdate:
                   type: object
-                currentPassword:
-                  type: string
-                newPassword:
-                  type: string
             example:
               fName: Ali
               lName: Salehi
@@ -136,8 +132,37 @@ paths:
               address: azadi .st
               zipCode: 25
               birthdate: "1990-07-05T20:30:00.000Z"
-              currentPassword: a111111
-              newPassword: a333333
+      responses:
+        "200":
+          description: |-
+            OK
+        "403":
+          description: |-
+            currentPassword is not correct.
+
+  /user/changePassword:
+    post:
+      tags:
+        - Users
+      operationId: postChangePasswordV1
+      summary: Change user password
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+            example:
+              currentPassword: "000000"
+              newPassword: "123123"
+
       responses:
         "200":
           description: |-
