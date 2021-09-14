@@ -2,7 +2,7 @@
 openapi: "3.0.0"
 info:
   title: Rayan GPS API Documentation
-  version: 1.3.0
+  version: 1.4.0
   description:
     This is `RayanGPS.com/Panel` APIs documentation You can find out more about
     AVL at [RayanGPS.com](http://rayangps.com)
@@ -10,16 +10,19 @@ info:
 servers:
   - url: http://localhost:2001/api
     description: localhost
-  - url: https://rayangps.com:3001/api
+  - url: https://api.rayangps.com/api
     description: HTTPS (Recommended)
-  - url: http://rayangps.com:2001/api
-    description: HTTP
 
 tags:
   - name: Auth
-    description: Authorization 
+    description: Authorization
     externalDocs:
       url: https://rayangps.com/panel/profile
+
+  - name: Map
+    description:
+    externalDocs:
+      url: https://rayangps.com/panel/
 
   - name: Users
     description: Operations on users information
@@ -35,7 +38,7 @@ tags:
     description: Ticketing system for users
     externalDocs:
       url: https://rayangps.com/panel/support/ticket
-      
+
   - name: Report
     description: Report
     externalDocs:
@@ -47,7 +50,49 @@ tags:
     url: https://rayangps.com/panel/settings
 
 paths:
-  /logout:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Generates JWT token
+      parameters:
+        - in: header
+          name: x-app-id
+          schema:
+            type: string
+          required: true
+          example: rayan_web
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+            example:
+              username: "rayan_user"
+              password: "Q?U73wVg"
+      responses:
+        "200":
+          description: |-
+            OK
+          headers:
+            x-auth-token:
+              schema:
+                type: string
+              description: After successful login, the server sends a Jason Web Token (JWT) which you should use for routes that need authorization.
+        "400":
+          description: |-
+            Bad request.
+        "403":
+          description: |-
+            The username or password is incorrect
+
+  /auth/logout:
     post:
       tags:
         - Auth
@@ -59,6 +104,96 @@ paths:
         "200":
           description: |-
             OK
+
+  /map/latestCarState/{carId}:
+    get:
+      tags:
+        - Map
+      summary: Returns latest carState of given car ID
+      security:
+        - jwtAuth: []
+      parameters:
+        - in: path
+          name: carId
+          type: string
+          required: true
+      responses:
+        "200":
+          description: |-
+            OK
+        "400":
+          description: |-
+            Bad request.
+        "403":
+          description: |-
+            The user has no permission to the requested car
+
+  /map/traveledPath:
+    post:
+      tags:
+        - Map
+      summary: Returns array of carStates in Given timespan
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                carId:
+                  type: array
+                dateFrom:
+                  type: string
+                dateTo:
+                  type: string
+            example:
+              carId: ["5ca1c5171616cd086c10957b"]
+              dateFrom: "2019-07-15T07:30:00.000Z"
+              dateTo: "2019-07-16T07:30:00.000Z"
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    [
+                      {
+                        "_id": "613dafc7f95f2c6fc4f3c91f",
+                        "coordinates": [34.642318, 50.890318],
+                        "postTime": "2021-09-12T07:44:05.000Z",
+                        "carID": "5ca1c5171616cd086c10957b",
+                      },
+                      {
+                        "_id": "613db0f2f95f2c6fc4f3d05b",
+                        "coordinates": [34.642314, 50.890329],
+                        "postTime": "2021-09-12T07:49:04.000Z",
+                        "carID": "5ca1c5171616cd086c10957b",
+                      },
+                      {
+                        "_id": "613db21ef95f2c6fc4f3d768",
+                        "coordinates": [34.642338, 50.890346],
+                        "postTime": "2021-09-12T07:54:03.000Z",
+                        "carID": "5ca1c5171616cd086c10957b",
+                      },
+                      {
+                        "_id": "613db348f95f2c6fc4f3de97",
+                        "coordinates": [34.642311, 50.890276],
+                        "postTime": "2021-09-12T07:59:02.000Z",
+                        "carID": "5ca1c5171616cd086c10957b",
+                      },
+                    ]
+
+        "400":
+          description: |-
+            Bad request.
+        "403":
+          description: |-
+            The user has no permission to the requested car
 
   /user:
     get:
@@ -88,7 +223,7 @@ paths:
                       "zipCode": "25",
                       "address": "",
                       "birthdate": "1990-07-05T20:30:00.000Z",
-                      "accountBalance": 1000
+                      "accountBalance": 1000,
                     }
     put:
       tags:
@@ -201,7 +336,7 @@ paths:
                 example1:
                   value:
                     {
-                      "url": "https://bpm.shaparak.ir/pgwchannel/startpay.mellat?RefId=A5141D19DAF64F96"
+                      "url": "https://bpm.shaparak.ir/pgwchannel/startpay.mellat?RefId=A5141D19DAF64F",
                     }
         "400":
           description: |-
@@ -268,12 +403,12 @@ paths:
       security:
         - jwtAuth: []
       parameters:
-          - in: path
-            name: ticketId
-            required: true
-            schema:
-              $ref: "#/components/schemas/general/properties/objectId"
-            description: The ticket ID
+        - in: path
+          name: ticketId
+          required: true
+          schema:
+            $ref: "#/components/schemas/general/properties/objectId"
+          description: The ticket ID
       responses:
         "200":
           description: |-
@@ -405,7 +540,6 @@ paths:
         "400":
           description: |-
             Bad request
-  
 
   /report/hourly:
     post:
@@ -429,8 +563,8 @@ paths:
             example:
               type: 2
               car: 5ca1c5171616cd086c10957b
-              endDate: '2020-10-25T20:29:59.999Z'
-              startDate: '2020-10-22T20:30:00.000Z'
+              endDate: "2020-10-25T20:29:59.999Z"
+              startDate: "2020-10-22T20:30:00.000Z"
       responses:
         "200":
           description: |-
@@ -444,19 +578,11 @@ paths:
                       "avgSpeed": 9.695652173913043,
                       "maxSpeed": 79,
                       "totalDistance": 25883,
-                      "startDate": {
-                        "year": 2020,
-                        "day": 23,
-                        "month": 10
-                      },
-                      "totalStatus": {
-                        "stop": 11472,
-                        "move": 91,
-                        "start": 25,
-                        "off": 25
-                      }
-                    } 
-        "403": 
+                      "startDate": { "year": 2020, "day": 23, "month": 10 },
+                      "totalStatus":
+                        { "stop": 11472, "move": 91, "start": 25, "off": 25 },
+                    }
+        "403":
           description: |-
             access denied
 
@@ -479,32 +605,34 @@ paths:
                   value:
                     [
                       {
-                          "valid": true,
-                          "_id": "5f9aac2a3b270220c8cf3df1",
-                          "loginDate": "2020-10-29T11:48:44.687Z",
-                          "user": {
-                              "_id": "5c210bdcac91d7258444bc3c",
-                              "username": "saj",
-                              "mobile": "09011100000"
+                        "valid": true,
+                        "_id": "5f9aac2a3b270220c8cf3df1",
+                        "loginDate": "2020-10-29T11:48:44.687Z",
+                        "user":
+                          {
+                            "_id": "5c210bdcac91d7258444bc3c",
+                            "username": "saj",
+                            "mobile": "09011100000",
                           },
-                          "userType": "admin",
-                          "application": "rayan_android",
-                          "__v": 0
+                        "userType": "admin",
+                        "application": "rayan_android",
+                        "__v": 0,
                       },
                       {
-                          "valid": true,
-                          "_id": "5fa276934cc110053ccb6b60",
-                          "user": {
-                              "_id": "5c210bdcac91d7258444bc3c",
-                              "username": "saj",
-                              "mobile": "09011100000"
+                        "valid": true,
+                        "_id": "5fa276934cc110053ccb6b60",
+                        "user":
+                          {
+                            "_id": "5c210bdcac91d7258444bc3c",
+                            "username": "saj",
+                            "mobile": "09011100000",
                           },
-                          "userType": "admin",
-                          "application": "rayan_web",
-                          "loginDate": "2020-11-04T09:38:27.000Z",
-                          "__v": 0
-                      }
-                    ]                 
+                        "userType": "admin",
+                        "application": "rayan_web",
+                        "loginDate": "2020-11-04T09:38:27.000Z",
+                        "__v": 0,
+                      },
+                    ]
 
   /token/dispose/{tokenId}:
     post:
@@ -528,7 +656,6 @@ paths:
         "404":
           description: |-
             Token not found
-          
 
 components:
   schemas:
@@ -558,7 +685,6 @@ components:
           enum: [0, 1, 2]
           required: true
           description: "0: low (کم) <br/> 1: medium (متوسط) <br/> 3: high (زیاد)"
-
 
   securitySchemes:
     jwtAuth:
