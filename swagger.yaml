@@ -297,7 +297,6 @@ paths:
             example:
               currentPassword: "000000"
               newPassword: "123123"
-
       responses:
         "200":
           description: |-
@@ -305,6 +304,21 @@ paths:
         "403":
           description: |-
             currentPassword is not correct.
+            
+  /user/payDebtWithBalance:
+    post:
+      tags:
+        - Users
+      summary: Debt settlement
+      security:
+        - jwtAuth: []
+      responses:
+        "200":
+          description: |-
+            OK
+        "400":
+          description: |-
+            user has no debt
 
   /payment/deposit:
     post:
