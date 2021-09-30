@@ -149,9 +149,10 @@ paths:
                 dateTo:
                   type: string
             example:
-              carId: ["5ca1c5171616cd086c10957b"]
-              dateFrom: "2019-07-15T07:30:00.000Z"
-              dateTo: "2019-07-16T07:30:00.000Z"
+              carId: ["60e47de9c654e80449368e50"]
+              dateFrom: "2021-09-28T07:30:00.000Z"
+              dateTo: "2021-09-30T12:45:00.000Z"
+              fullData: false
       responses:
         "200":
           description: |-
@@ -187,7 +188,64 @@ paths:
                         "carID": "5ca1c5171616cd086c10957b",
                       },
                     ]
-
+                example2:
+                  value:
+                    [
+                      {
+                          "coordinates": [
+                              35.728217,
+                              51.149864
+                          ],
+                          "_id": "6152c9a25de3887b2a38489d",
+                          "sigStatus": "1",
+                          "speed": 0,
+                          "postTime": "2021-09-28T07:51:38.000Z",
+                          "powerBreaks": false,
+                          "openHood": false,
+                          "openDoors": false,
+                          "openTrunk": false,
+                          "switchOn": false,
+                          "relocation": false,
+                          "lowBattry": false,
+                          "unauthorizedSpeed": false,
+                          "highTemp": false,
+                          "lowTemp": false,
+                          "SOS": false,
+                          "burglarAlarm": false,
+                          "stop": true,
+                          "hit": false,
+                          "height": 1257,
+                          "battery": 12.47,
+                          "carID": "60e47de9c654e80449368e50"
+                      },
+                      {
+                          "coordinates": [
+                              35.728217,
+                              51.149864
+                          ],
+                          "_id": "6152c9a65de3887b2a3848b0",
+                          "sigStatus": "1",
+                          "speed": 0,
+                          "postTime": "2021-09-28T07:52:03.000Z",
+                          "powerBreaks": false,
+                          "openHood": false,
+                          "openDoors": false,
+                          "openTrunk": false,
+                          "switchOn": false,
+                          "relocation": false,
+                          "lowBattry": false,
+                          "unauthorizedSpeed": false,
+                          "highTemp": false,
+                          "lowTemp": false,
+                          "SOS": false,
+                          "burglarAlarm": false,
+                          "stop": true,
+                          "hit": false,
+                          "height": 1257,
+                          "battery": 12.4,
+                          "carID": "60e47de9c654e80449368e50"
+                      }
+                    ]
         "400":
           description: |-
             Bad request.
