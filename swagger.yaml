@@ -49,6 +49,11 @@ tags:
     externalDocs:
     url: https://rayangps.com/panel/settings
 
+  - name: Subscription
+    description: For getting suscription plans and purchase
+    externalDocs:
+    url: https://rayangps.com/panel/
+
 paths:
   /auth/login:
     post:
@@ -192,59 +197,53 @@ paths:
                   value:
                     [
                       {
-                          "coordinates": [
-                              35.728217,
-                              51.149864
-                          ],
-                          "_id": "6152c9a25de3887b2a38489d",
-                          "sigStatus": "1",
-                          "speed": 0,
-                          "postTime": "2021-09-28T07:51:38.000Z",
-                          "powerBreaks": false,
-                          "openHood": false,
-                          "openDoors": false,
-                          "openTrunk": false,
-                          "switchOn": false,
-                          "relocation": false,
-                          "lowBattry": false,
-                          "unauthorizedSpeed": false,
-                          "highTemp": false,
-                          "lowTemp": false,
-                          "SOS": false,
-                          "burglarAlarm": false,
-                          "stop": true,
-                          "hit": false,
-                          "height": 1257,
-                          "battery": 12.47,
-                          "carID": "60e47de9c654e80449368e50"
+                        "coordinates": [35.728217, 51.149864],
+                        "_id": "6152c9a25de3887b2a38489d",
+                        "sigStatus": "1",
+                        "speed": 0,
+                        "postTime": "2021-09-28T07:51:38.000Z",
+                        "powerBreaks": false,
+                        "openHood": false,
+                        "openDoors": false,
+                        "openTrunk": false,
+                        "switchOn": false,
+                        "relocation": false,
+                        "lowBattry": false,
+                        "unauthorizedSpeed": false,
+                        "highTemp": false,
+                        "lowTemp": false,
+                        "SOS": false,
+                        "burglarAlarm": false,
+                        "stop": true,
+                        "hit": false,
+                        "height": 1257,
+                        "battery": 12.47,
+                        "carID": "60e47de9c654e80449368e50",
                       },
                       {
-                          "coordinates": [
-                              35.728217,
-                              51.149864
-                          ],
-                          "_id": "6152c9a65de3887b2a3848b0",
-                          "sigStatus": "1",
-                          "speed": 0,
-                          "postTime": "2021-09-28T07:52:03.000Z",
-                          "powerBreaks": false,
-                          "openHood": false,
-                          "openDoors": false,
-                          "openTrunk": false,
-                          "switchOn": false,
-                          "relocation": false,
-                          "lowBattry": false,
-                          "unauthorizedSpeed": false,
-                          "highTemp": false,
-                          "lowTemp": false,
-                          "SOS": false,
-                          "burglarAlarm": false,
-                          "stop": true,
-                          "hit": false,
-                          "height": 1257,
-                          "battery": 12.4,
-                          "carID": "60e47de9c654e80449368e50"
-                      }
+                        "coordinates": [35.728217, 51.149864],
+                        "_id": "6152c9a65de3887b2a3848b0",
+                        "sigStatus": "1",
+                        "speed": 0,
+                        "postTime": "2021-09-28T07:52:03.000Z",
+                        "powerBreaks": false,
+                        "openHood": false,
+                        "openDoors": false,
+                        "openTrunk": false,
+                        "switchOn": false,
+                        "relocation": false,
+                        "lowBattry": false,
+                        "unauthorizedSpeed": false,
+                        "highTemp": false,
+                        "lowTemp": false,
+                        "SOS": false,
+                        "burglarAlarm": false,
+                        "stop": true,
+                        "hit": false,
+                        "height": 1257,
+                        "battery": 12.4,
+                        "carID": "60e47de9c654e80449368e50",
+                      },
                     ]
         "400":
           description: |-
@@ -362,7 +361,7 @@ paths:
         "403":
           description: |-
             currentPassword is not correct.
-            
+
   /user/payDebtWithBalance:
     post:
       tags:
@@ -729,6 +728,93 @@ paths:
           description: |-
             Token not found
 
+  /subs/{idOrIMEI}:
+    get:
+      tags:
+        - Subscription
+      operationId: getSubsV1
+      summary: Get subscription plans
+      security:
+        - jwtAuth: []
+      parameters:
+        - in: path
+          name: idOrIMEI
+          required: true
+          description: ID or IMEI of the car for which you want to get subscriptions info
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    {
+                      "subs":
+                        {
+                          "plan6": { "price": 350000, "discountPrice": 290000 },
+                          "plan12":
+                            { "price": 550000, "discountPrice": 450000 },
+                          "expirationWarnDays": 3,
+                          "_id": "62077d69800c883b2c0817f9",
+                          "ExpirationWarnDays": 2,
+                          "brand": "rayan",
+                          "freeMos": 3,
+                          "expirationType": 1,
+                          "discountDeadline": 10,
+                          "__v": 0,
+                        },
+                      "gps": { "IMEI": "867793033333834", "hasDiscount": true },
+                    }
+  /subs/purchase:
+    post:
+      tags:
+        - Subscription
+      operationId: postSubsV1
+      summary: Get subscription plans
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subsId:
+                  $ref: "#/components/schemas/general/properties/objectId"
+                plan:
+                  type: string
+                  enum:
+                    - plan6
+                    - plan12
+                  required: true
+                IMEI:
+                  type: string
+                  required: true
+                hasDiscount:
+                  type: boolean
+            example:
+              {
+                "subsId": "624546dd426a4a33085f333f",
+                "plan": "plan12",
+                "IMEI": "222222222222221",
+                "hasDiscount": true,
+              }
+
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    {
+                      "url": "https://bpm.shaparak.ir/pgwchannel/startpay.mellat?RefId=F123B047CA826EOE",
+                    }
 components:
   schemas:
     general:
@@ -757,6 +843,16 @@ components:
           enum: [0, 1, 2]
           required: true
           description: "0: low (کم) <br/> 1: medium (متوسط) <br/> 3: high (زیاد)"
+    statusCodes:
+      title: Custom HTTP response status codes
+      type: object
+      properties:
+        codes:
+          type: number
+          description: >
+            480: User account has been suspended (حساب کاربر مسدود شده است) <br/>
+            481: موجودی حساب کاربر کافی نیست <br/>
+            482: Subscription has expired (اشتراک خودرو کاربر به پایان رسیده است) <br/>
 
   securitySchemes:
     jwtAuth:
