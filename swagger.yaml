@@ -54,6 +54,10 @@ tags:
     externalDocs:
     url: https://rayangps.com/panel/
 
+  - name: Commands
+    description: For getting commnads based on device model
+    externalDocs:
+
 paths:
   /auth/login:
     post:
@@ -815,6 +819,90 @@ paths:
                     {
                       "url": "https://bpm.shaparak.ir/pgwchannel/startpay.mellat?RefId=F123B047CA826EOE",
                     }
+  /command/user/{model}/{type}:
+    get:
+      tags:
+        - commands
+      operationId: getSubsV1
+      summary: Get commands and groups
+      security:
+        - jwtAuth: []
+      parameters:
+        - in: path
+          name: model
+          required: true
+          description: Device model
+          example: 301MB
+        - in: path
+          name: type
+          required: false
+          description: Set one of the record types ('group', 'subsGroup', 'command') or nothing to get all
+          example: group
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    [
+                      {
+                          "id": 1,
+                          "parentId": null,
+                          "models": [
+                              "301MB",
+                              "DS100"
+                          ],
+                          "_id": "6300a59470e46a18d0132d24",
+                          "type": "group",
+                          "title": "map",
+                          "priority": 3,
+                          "agencyPassword": "",
+                          "agencyPasswordTitle": "",
+                          "description": "map google",
+                          "icon": "files/icons/test.png",
+                          "video": "",
+                          "audio": "",
+                          "hasAlert": false,
+                          "alertTitle": ""
+                      },
+                      {
+                          "id": 99,
+                          "parentId": 5,
+                          "models": [
+                              "DS100"
+                          ],
+                          "_id": "6300a59470e46a18d0132d2a",
+                          "type": "command",
+                          "title": "osm",
+                          "priority": 1,
+                          "agencyPassword": "",
+                          "agencyPasswordTitle": "",
+                          "parametersCount": 2,
+                          "parametersTitle": [
+                              "پارامتریک",
+                              "پارامتردو"
+                          ],
+                          "valueType": [
+                              "text",
+                              "number"
+                          ],
+                          "range": [
+                              [
+                                  10,
+                                  99
+                              ]
+                          ],
+                          "required": [
+                              true,
+                              true
+                          ],
+                          "command": "OSM.${param.first}.${param.second}"
+                      }
+                  ]
+
 components:
   schemas:
     general:
