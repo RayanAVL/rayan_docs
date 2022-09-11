@@ -819,11 +819,12 @@ paths:
                     {
                       "url": "https://bpm.shaparak.ir/pgwchannel/startpay.mellat?RefId=F123B047CA826EOE",
                     }
+
   /command/user/{model}/{type}:
     get:
       tags:
         - commands
-      operationId: getSubsV1
+      operationId: getCommnadV1
       summary: Get commands and groups
       security:
         - jwtAuth: []
@@ -849,59 +850,79 @@ paths:
                   value:
                     [
                       {
-                          "id": 1,
-                          "parentId": null,
-                          "models": [
-                              "301MB",
-                              "DS100"
-                          ],
-                          "_id": "6300a59470e46a18d0132d24",
-                          "type": "group",
-                          "title": "map",
-                          "priority": 3,
-                          "agencyPassword": "",
-                          "agencyPasswordTitle": "",
-                          "description": "map google",
-                          "icon": "files/icons/test.png",
-                          "video": "",
-                          "audio": "",
-                          "hasAlert": false,
-                          "alertTitle": ""
+                        "id": 1,
+                        "parentId": null,
+                        "models": ["301MB", "DS100"],
+                        "_id": "6300a59470e46a18d0132d24",
+                        "type": "group",
+                        "title": "map",
+                        "priority": 3,
+                        "agencyPassword": "",
+                        "agencyPasswordTitle": "",
+                        "description": "map google",
+                        "icon": "files/icons/test.png",
+                        "video": "",
+                        "audio": "",
+                        "hasAlert": false,
+                        "alertTitle": "",
                       },
                       {
-                          "id": 99,
-                          "parentId": 5,
-                          "models": [
-                              "DS100"
-                          ],
-                          "_id": "6300a59470e46a18d0132d2a",
-                          "type": "command",
-                          "title": "osm",
-                          "priority": 1,
-                          "agencyPassword": "",
-                          "agencyPasswordTitle": "",
-                          "parametersCount": 2,
-                          "parametersTitle": [
-                              "پارامتریک",
-                              "پارامتردو"
-                          ],
-                          "valueType": [
-                              "text",
-                              "number"
-                          ],
-                          "range": [
-                              [
-                                  10,
-                                  99
-                              ]
-                          ],
-                          "required": [
-                              true,
-                              true
-                          ],
-                          "command": "OSM.${param.first}.${param.second}"
-                      }
-                  ]
+                        "id": 99,
+                        "parentId": 5,
+                        "models": ["DS100"],
+                        "_id": "6300a59470e46a18d0132d2a",
+                        "type": "command",
+                        "title": "osm",
+                        "priority": 1,
+                        "agencyPassword": "",
+                        "agencyPasswordTitle": "",
+                        "parametersCount": 2,
+                        "parametersTitle": ["پارامتریک", "پارامتردو"],
+                        "valueType": ["text", "number"],
+                        "range": [[10, 99]],
+                        "required": [true, true],
+                        "command": "OSM.${param.first}.${param.second}",
+                      },
+                    ]
+  /command/send:
+    post:
+      tags:
+        - commands
+      operationId: postSubsV1
+      summary: Get subscription plans
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                IMEI:
+                  type: string
+                  required: true
+                commandId:
+                  type: string
+                  required: true
+                parameters:
+                  $ref: "#/components/schemas/general/properties/objectId"
+            example:
+              {
+                "IMEI": "300009172504363",
+                "commandId": "630c75c74f27f764bc4cb554",
+                "parameters": ["test"],
+              }
+
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value: { isOnline: true }
 
 components:
   schemas:
