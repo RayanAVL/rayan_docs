@@ -823,7 +823,7 @@ paths:
   /command/user/{model}/{type}:
     get:
       tags:
-        - commands
+        - Commands
       operationId: getCommnadV1
       summary: Get commands and groups
       security:
@@ -887,9 +887,9 @@ paths:
   /command/send:
     post:
       tags:
-        - commands
-      operationId: postSubsV1
-      summary: Get subscription plans
+        - Commands
+      operationId: postCommandsV1
+      summary: Sends command to device
       security:
         - jwtAuth: []
       requestBody:
@@ -924,6 +924,29 @@ paths:
                 example1:
                   value: { isOnline: true }
 
+  /command/check/{IMEI}:
+    get:
+      tags:
+        - Commands
+      operationId: getCommandsCheckV1
+      summary: returns device availability status
+      parameters:
+        - in: path
+          name: IMEI
+          type: string
+          required: true
+      security:
+        - jwtAuth: []
+
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value: { isOnline: true }
 components:
   schemas:
     general:
