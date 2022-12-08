@@ -58,6 +58,10 @@ tags:
     description: For getting commnads based on device model
     externalDocs:
 
+  - name: Response
+    description: Device commands response
+    externalDocs:
+
 paths:
   /auth/login:
     post:
@@ -947,6 +951,71 @@ paths:
               examples:
                 example1:
                   value: { isOnline: true }
+
+  /response/{IMEI}:
+    get:
+      tags:
+        - Response
+      operationId: getResponseV1
+      summary: returns device commands response
+      description:
+        By sending any commands, a document inserts into the response collection. after the device receives the command, updates that document with its response.
+        <br/> "status" property specifies whether the document has the response or not. 1 = has response
+      parameters:
+        - in: path
+          name: IMEI
+          type: string
+          required: false
+      security:
+        - jwtAuth: []
+
+      responses:
+        "200":
+          description: |-
+            OK
+          content:
+            application/json:
+              examples:
+                example1:
+                  value:
+                    [
+                      {
+                        "status": 0,
+                        "_id": "638270d701338e23340023f2",
+                        "commandTitle": "فعال سازی",
+                        "subGroupTitle": "زمان ارسال در حرکت",
+                        "IMEI": "867857033268074",
+                        "car":
+                          {
+                            "_id": "62e234d0d4dc114f3c504319",
+                            "name": "42421",
+                            "id": "62e234d0d4dc114f3c504319",
+                          },
+                        "user": "5d2ac7e371426831ac6d3330",
+                        "command": "TCPDATA=${param.password}.AAARM:1#",
+                        "registerDate": "2022-11-26T20:02:31.276Z",
+                        "__v": 0,
+                      },
+                      {
+                        "response": { "text": "انجام شد" },
+                        "status": 1,
+                        "_id": "63147ce7b9e259640c174d69",
+                        "registerDate": "2022-09-04T10:24:26.870Z",
+                        "commandTitle": "ایجاد مالک دوم",
+                        "IMEI": "867857033268074",
+                        "car":
+                          {
+                            "_id": "62e234d0d4dc114f3c504319",
+                            "name": "42421",
+                            "id": "62e234d0d4dc114f3c504319",
+                          },
+                        "user": "5d2ac7e371426831ac6d3330",
+                        "command": "TCPDATA=123.ADMIN2:test#",
+                        "__v": 0,
+                        "execDate": "2022-09-04T13:45:10.000Z",
+                      },
+                    ]
+
 components:
   schemas:
     general:
