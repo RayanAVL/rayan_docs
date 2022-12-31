@@ -926,7 +926,10 @@ paths:
             application/json:
               examples:
                 example1:
-                  value: { isOnline: true }
+                  value: { 
+                      isOnline: true, 
+                      responseId: 630c75c74f27f764bc4dc114
+                    }
 
   /command/check/{IMEI}:
     get:
@@ -952,7 +955,7 @@ paths:
                 example1:
                   value: { isOnline: true }
 
-  /response/{IMEI}:
+  /response/{IMEI}/{id}:
     get:
       tags:
         - Response
@@ -964,6 +967,10 @@ paths:
       parameters:
         - in: path
           name: IMEI
+          type: string
+          required: false
+        - in: path
+          name: id
           type: string
           required: false
       security:
