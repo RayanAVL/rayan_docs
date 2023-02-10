@@ -63,6 +63,88 @@ tags:
     externalDocs:
 
 paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: New user registeration API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                IMEI:
+                  type: string
+                  required: true
+                username:
+                  type: string
+                  required: true
+                password:
+                  type: string
+                  required: true
+                userPhoneNumber:
+                  type: string
+                  required: true
+            example:
+              IMEI: "143298573948392"
+              username: "rayanuser"
+              password: "Q?U73wVg"
+              userPhoneNumber: "09120399222"
+      responses:
+        "200":
+          description: |-
+            OK
+          headers:
+            x-auth-token:
+              schema:
+                type: string
+              description: returns token which should use for secured APIs.
+        "400":
+          description: |-
+            Bad request.
+        "404":
+          description: |-
+            IMEI not found
+        "409":
+          description: |-
+            Phone number, username or IMEI is already registered
+    put:
+      tags:
+        - Auth
+      summary: New user registeration (Step 2) 
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fName:
+                  type: string
+                lName:
+                  type: string
+                company:
+                  type: string
+                idCode:
+                  type: string
+                email:
+                  type: string
+            example:
+              fName: "Jason"
+              lName: "Adams"
+              email: "user@example.com"
+      responses:
+        "200":
+          description: |-
+            OK
+        "404":
+          description: |-
+            User not found
+
   /auth/login:
     post:
       tags:
@@ -87,7 +169,7 @@ paths:
                 password:
                   type: string
             example:
-              username: "rayan_user"
+              username: "rayanuser"
               password: "Q?U73wVg"
       responses:
         "200":
@@ -606,9 +688,12 @@ paths:
                   $ref: "#/components/schemas/general/properties/objectId"
                 text:
                   type: string
+                carStatus:
+                  type: string
             example:
               ticketId: 5db6a6383612da23a4e76a4e
               text: متن توضیحات پیام
+              carStatus: "وضعیت خودرو ارسال شده توسط دستگاه"
       responses:
         "200":
           description: |-
